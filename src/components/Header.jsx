@@ -1,12 +1,15 @@
 import React, { useState } from "react";
-import { IoSearch } from "react-icons/io5";
+import { IoBarbell, IoSearch } from "react-icons/io5";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { IoMdClose } from "react-icons/io";
+import { IoMail } from "react-icons/io5";
+import { FaBell } from "react-icons/fa";
 
 function Header() {
   const [activeMenu, setActiveMenu] = useState(null);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [showSearch, setShowSearch] = useState(false);
+  const [country, setCountry] = useState("India");
+  const [query, setQuery] = useState("");
 
   const menus = [
     { name: "Phones", links: ["iPhone", "Samsung", "OnePlus"] },
@@ -16,14 +19,47 @@ function Header() {
     { name: "Gaming", links: ["Fitness", "Sleep", "Diet"] },
     { name: "More", links: ["News", "Reviews", "Guides"] },
   ];
+  const countries = ["India", "USA", "UK", "Canada"];
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (query.trim()) {
+      alert(`Searching for: ${query}`); // Replace this with your actual search logic
+    }
+  };
 
   return (
     <header className="flex justify-between items-center bg-white px-6 py-4 shadow-xl sticky top-0 z-50">
       {/* Logo */}
-      <h1 className="text-blue-600 text-2xl font-bold hover:text-blue-700"><a href="">tom's guide</a></h1>
+      <h1 className="text-blue-600 text-2xl font-bold hover:text-blue-700">
+        <a href="">tom's guide</a>
+      </h1>
+
+      {/* Location and Newsletters */}
+      <div className="flex gap-5">
+        <div className="location">
+          <select
+            value={country}
+            onChange={(e) => setCountry(e.target.value)}
+            className="rounded px-1 py-1 text-sm outline-none focus:ring-2 border-[1px] focus:ring-blue-500"
+          >
+            {countries.map((c, i) => (
+              <option key={i} value={c}>
+                {c}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="newsletter">
+          <h2 className="flex justify-center items-center gap-2 text-sm">
+            <span className="bg-sky-500 p-1 rounded-full text-white"><IoMail /></span>
+            <a href="">Newsletters</a>
+          </h2>
+        </div>
+      </div>
 
       {/* Desktop Navigation */}
-      <nav className="hidden md:flex justify-center items-center text-gray-800 text-sm font-medium gap-8 relative cursor-pointer">
+      <nav className="hidden md:flex justify-center items-center text-gray-800 text-sm font-medium gap-5 relative cursor-pointer">
         {menus.map((menu, index) => (
           <div
             key={index}
@@ -46,7 +82,8 @@ function Header() {
                   <a
                     key={i}
                     href="#"
-                    className="block px-3 py-1 text-sm hover:bg-gray-100 rounded">
+                    className="block px-3 py-1 text-sm hover:bg-gray-100 rounded"
+                  >
                     {link}
                   </a>
                 ))}
@@ -56,21 +93,32 @@ function Header() {
         ))}
       </nav>
 
-      {/* Search + Hamburger (mobile) */}
+      {/* Sign in Button and Notifications */}
+      <div className="flex justify-center items-center gap-4">
+        <button className="text-sm"><a href="">Sign In</a></button>
+
+        <button><FaBell/></button>
+      </div>
+
+      {/* Search + Hamburger */}
       <div className="flex items-center gap-4">
-        {showSearch && (
+        {/* Search Box */}
+        <form onSubmit={handleSearch} className="relative">
           <input
             type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
             placeholder="Search..."
-            className="border px-3 py-1 rounded outline-none focus:ring-2 focus:ring-blue-500"
+            className="border-[1px] rounded pl-6 outline-none focus:ring-1 focus:ring-blue-500"
           />
-        )}
-        <button
-          className="text-lg font-semibold cursor-pointer hover:text-blue-500"
-          onClick={() => setShowSearch(!showSearch)}
-        >
-          <IoSearch />
-        </button>
+          <button
+            type="submit"
+            className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-blue-600">
+            <IoSearch />
+          </button>
+        </form>
+
+        {/* Hamburger Menu */}
         <button
           className="text-2xl md:hidden"
           onClick={() => setMobileOpen(!mobileOpen)}
